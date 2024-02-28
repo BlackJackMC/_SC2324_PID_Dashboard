@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PID Dashboard</title>
+
+  </head>
+  <body>
+    <form id="webserver">
+        <fieldset>
+            <legend>Host URL</legend>
+            <input type="text" placeholder="Host URL" id="url">
+    </fieldset>
+    </form>
+    <form id="PID">
+      <fieldset>
+        <legend>Update PID</legend>
+        <input type="number" step="any" placeholder="Kp" id="Kp" name="Kp"/>
+        <input type="number" step="any" placeholder="Ki" id="Ki" name="Ki"/>
+        <input type="number" step="any" placeholder="Kd" id="Kd" name="Kd"/>
+        <button type="submit" value="submit">Update</button>
+      </fieldset>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+  </body>
+</html>
