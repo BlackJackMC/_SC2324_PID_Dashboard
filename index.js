@@ -16,13 +16,12 @@ $(document).ready(() => {
         e.preventDefault();
         
         const formData = new FormData(this);
-        const data = {};
-        formData.entries().forEach((value, key) => { data[key] = value; });
+        const data = Object.fromEntries(formData.entries());
 
         console.log(data);
 
         $.ajax({
-            url: host,
+            url: host + "/pid",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(data),
@@ -30,7 +29,7 @@ $(document).ready(() => {
                 console.log("PID sent");
             },
             error: (jqXHR, textStatus, errorThrown) => {
-                console.error("Error: " + errorThrown);
+                console.error(`Error: ${errorThrown}\n Status: ${textStatus}`);
             }
         });
     });
