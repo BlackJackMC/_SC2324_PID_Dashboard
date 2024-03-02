@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PID Dashboard</title>
 
-  </head>
-  <body>
-    <form id="webserver">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PID Dashboard</title>
+  <link rel="stylesheet" href="./style.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js" defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
+  <script type="text/javascript" src="index.js" defer></script>
+
+</head>
+
+<body>
+  <div class="container" id="dashboard">
+    <div>
+      <form id="webserver">
         <fieldset>
-            <legend>Host URL</legend>
-            <input type="text" placeholder="Host URL" id="url">
+          <legend>Host URL</legend>
+          <input type="text" placeholder="Host URL" id="url">
+        </fieldset>
+      </form>
+      <form id="PID">
+        <fieldset>
+          <legend>Update PID</legend>
+          <input type="number" step="any" placeholder="Kp" id="Kp" name="Kp" value="0" />
+          <input type="number" step="any" placeholder="Ki" id="Ki" name="Ki" value="0" />
+          <input type="number" step="any" placeholder="Kd" id="Kd" name="Kd" value="0" />
+          <button type="submit" value="submit">Update</button>
+        </fieldset>
+      </form>
+    </div>
+    <fieldset id="serial_monitor">
+      <legend>Serial monitor</legend>
+      <div id="message"></div>
     </fieldset>
-    </form>
-    <form id="PID">
-      <fieldset>
-        <legend>Update PID</legend>
-        <input type="number" step="any" placeholder="Kp" id="Kp" name="Kp" value="0"/>
-        <input type="number" step="any" placeholder="Ki" id="Ki" name="Ki" value="0"/>
-        <input type="number" step="any" placeholder="Kd" id="Kd" name="Kd" value="0"/>
-        <button type="submit" value="submit">Update</button>
-      </fieldset>
-    </form>
+  </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="index.js"></script>
-  </body>
+</body>
+
 </html>

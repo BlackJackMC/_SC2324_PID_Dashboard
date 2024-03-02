@@ -1,8 +1,7 @@
-let host = "";
 
 function debounce(func, delay) {
     let timer;
-
+    
     return function() {
         const args = arguments;
         const scope = this;
@@ -10,6 +9,13 @@ function debounce(func, delay) {
         timer = setTimeout(() => {func.apply(scope, args);}, delay);
     };
 }
+
+let host = "";
+let socket;
+
+const serial_message = $("#message");
+
+
 
 $(document).ready(() => {
     $("#PID").on("submit", function(e) {
@@ -35,14 +41,22 @@ $(document).ready(() => {
     });
 
     host = sessionStorage.getItem("host_url") || "";
+    socket = io(host);
+
     $("#webserver").on("submit", function(e) {
         e.preventDefault();
     })
     $("#url").val(host);
+
     $("#url").on("keydown", debounce(function(e) {
         if (e.key !== "Control" && e.key !== "Shift" && e.key !== "Alt" && e.key !== "Tab") {
             host = $(this).val();
+            socket = io(host);
             sessionStorage.setItem("host_url", host);
         }
     }, 150));
+
+    socket.on("serial", (message) => {
+        serial_message.append(`<p>[Serial]: ${message}</p>`)
+    });
 });
