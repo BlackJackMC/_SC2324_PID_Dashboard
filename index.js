@@ -27,10 +27,11 @@ function change_host(host) {
         socket = io(host);
     } catch (e) {
         console.error(`Host not found: ${host}`);
+        return;
     }
 
     socket.on("serial", async (message) => {
-        await serial_message.append(`<p>[${time_formatter.format(new Date())}][Serial]: ${message}</p>`)
+        await serial_message.append(`<p>${message}</p>`)
     });
 }
 
@@ -64,7 +65,7 @@ $(document).ready(() => {
         });
     });
 
-    host = sessionStorage.getItem("host_url") || "";
+    host = localStorage.getItem("host_url") || "";
     change_host(host);
 
     $("#webserver").on("submit", function (e) {
@@ -76,7 +77,7 @@ $(document).ready(() => {
         if (e.key !== "Control" && e.key !== "Shift" && e.key !== "Alt" && e.key !== "Tab") {
             host = $(this).val();
             change_host(host);
-            sessionStorage.setItem("host_url", host);
+            localStorage.setItem("host_url", host);
         }
     }, 150));
 });
