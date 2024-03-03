@@ -27,4 +27,5 @@ body * {
 
 #serial_monitor {
     grid-column: span 2;
+    overflow-y: auto;
 }

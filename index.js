@@ -1,12 +1,12 @@
 
 function debounce(func, delay) {
     let timer;
-    
-    return function() {
+
+    return function () {
         const args = arguments;
         const scope = this;
         if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {func.apply(scope, args);}, delay);
+        timer = setTimeout(() => { func.apply(scope, args); }, delay);
     };
 }
 
@@ -14,13 +14,37 @@ let host = "";
 let socket;
 
 const serial_message = $("#message");
+const time_formatter = new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true
+});
 
+function change_host(host) {
+    try {
+        socket = io(host);
+    } catch (e) {
+        console.error(`Host not found: ${host}`);
+    }
 
+    socket.on("serial", async (message) => {
+        await serial_message.append(`<p>[${time_formatter.format(new Date())}][Serial]: ${message}</p>`)
+    });
+}
+
+function set_height() {
+    const height = $("#sidebar").height();
+    $("#serial_monitor").css("max-height", height);
+}
 
 $(document).ready(() => {
-    $("#PID").on("submit", function(e) {
+    set_height();
+
+    $("#PID").on("submit", function (e) {
         e.preventDefault();
-        
+
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
 
@@ -41,22 +65,18 @@ $(document).ready(() => {
     });
 
     host = sessionStorage.getItem("host_url") || "";
-    socket = io(host);
+    change_host(host);
 
-    $("#webserver").on("submit", function(e) {
+    $("#webserver").on("submit", function (e) {
         e.preventDefault();
     })
     $("#url").val(host);
 
-    $("#url").on("keydown", debounce(function(e) {
+    $("#url").on("keydown", debounce(function (e) {
         if (e.key !== "Control" && e.key !== "Shift" && e.key !== "Alt" && e.key !== "Tab") {
             host = $(this).val();
-            socket = io(host);
+            change_host(host);
             sessionStorage.setItem("host_url", host);
         }
     }, 150));
-
-    socket.on("serial", (message) => {
-        serial_message.append(`<p>[Serial]: ${message}</p>`)
-    });
 });
