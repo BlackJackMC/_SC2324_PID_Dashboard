@@ -22,7 +22,7 @@ const time_formatter = new Intl.DateTimeFormat('en-US', {
     hour12: true
 });
 
-function change_host(host) {
+function change_websocket_host(host) {
     try {
         socket = io(host);
     } catch (e) {
@@ -40,6 +40,25 @@ function set_height() {
     $("#serial_monitor").css("max-height", height);
 }
 
+function get_pid() {
+    $.ajax({
+        url: `http://${host}/pid`,
+        type: "GET",
+        success: (data, textStatus, jqXHR) => {
+            console.log("PID got");
+            const [ Kp, Ki, Kd ] = data.split(' ');
+            console.log(Kp, Ki, Kd);
+            $("#Kp").attr("value", Kp);
+            $("#Ki").attr("value", Ki);
+            $("#Kd").attr("value", Kd);
+        },
+        error: (jqXHR, textStatus, errorThrown) => {
+            console.error(`Error: ${errorThrown}\n Status: ${textStatus}`);
+            console.log(jqXHR)
+        }
+    });
+}
+
 $(document).ready(() => {
     set_height();
 
@@ -52,7 +71,7 @@ $(document).ready(() => {
         console.log(data);
 
         $.ajax({
-            url: host + "/pid",
+            url: `http://${host}/pid`,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(data),
@@ -63,10 +82,13 @@ $(document).ready(() => {
                 console.error(`Error: ${errorThrown}\n Status: ${textStatus}`);
             }
         });
+
+        get_pid();
     });
 
     host = localStorage.getItem("host_url") || "";
-    change_host(host);
+    change_websocket_host(host);
+    get_pid();
 
     $("#webserver").on("submit", function (e) {
         e.preventDefault();
@@ -76,7 +98,8 @@ $(document).ready(() => {
     $("#url").on("keydown", debounce(function (e) {
         if (e.key !== "Control" && e.key !== "Shift" && e.key !== "Alt" && e.key !== "Tab") {
             host = $(this).val();
-            change_host(host);
+            get_pid();
+            change_websocket_host(host);
             localStorage.setItem("host_url", host);
         }
     }, 150));
