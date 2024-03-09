@@ -14,17 +14,15 @@ let host = "";
 let socket;
 
 const serial_message = $("#message");
-const time_formatter = new Intl.DateTimeFormat('en-US', {
-    weekday: 'short',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true
-});
 
 function change_websocket_host(host) {
     try {
-        socket = io(host);
+        socket = io(host, {
+            reconnectionDelay: 1000,
+            reconnectionAttempts: 5,
+            reconnection: true,
+            timeout: 10000
+        });
     } catch (e) {
         console.error(`Host not found: ${host}`);
         return;
@@ -46,7 +44,7 @@ function get_pid() {
         type: "GET",
         success: (data, textStatus, jqXHR) => {
             console.log("PID got");
-            const [ Kp, Ki, Kd ] = data.split(' ');
+            const [Kp, Ki, Kd] = data.split(' ');
             console.log(Kp, Ki, Kd);
             $("#Kp").attr("value", Kp);
             $("#Ki").attr("value", Ki);

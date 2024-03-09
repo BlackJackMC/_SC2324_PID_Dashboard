@@ -29,3 +29,9 @@ body * {
     grid-column: span 2;
     overflow-y: auto;
 }
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+    }
+}
